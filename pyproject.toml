@@ -4,6 +4,12 @@ version = "0.1.0"
 description = "Airflow utilities for biological sequences"
 authors = ["Piotr Styczyński <piotr@styczynski.in>"]
 license = "MIT"
+readme = "README.md"
+include = [
+    { path = 'README.md', format = 'wheel' },
+    { path = 'README.md', format = 'sdist' },
+    "README.md"
+]
 
 [tool.poetry.scripts]
 publish = 'publish:publish'
