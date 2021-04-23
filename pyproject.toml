@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "airflow_bio_utils"
+version = "0.1.0"
+description = "Airflow utilities for biological sequences"
+authors = ["Piotr Styczyński <piotr@styczynski.in>"]
+license = "MIT"
+
+[tool.poetry.scripts]
+create-random-sequences = "airflow_bio_utils.cli.create_random_sequences:create_random_sequences_cli"
+filter-sequences = "airflow_bio_utils.cli.filter_sequences:filter_sequences_cli"
+merge-sequences = "airflow_bio_utils.cli.merge_sequences:merge_sequences_cli"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+biopython = "^1.78"
+pandas = "^1.1.5"
+click = "^7.1.2"
+tqdm = "^4.56.0"
+apache-airflow = ">=2.0.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.1"
+flakehell = "0.9.0"
+flake8 = "3.8.3"
+pytest-xdist = "^2.2.0"
+isort = "^5.7.0"
+black = "^20.8b1"
+pydoc-markdown = "^3.9.0"
+s3pypi = "^0.11.0"
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.flakehell]
+exclude = ["README.rst", "README.md"]
+format = "colored"
+max_line_length = 120
+show_source = true
+whitelist = "../../allowlist.txt"
+
+[tool.flakehell.plugins]
+flake8-bandit = ["+*", "-S322"]
+flake8-bugbear = ["+*"]
+flake8-builtins = ["+*"]
+flake8-comprehensions = ["+*"]
+flake8-darglint = ["+*"]
+flake8-docstrings = ["+*"]
+flake8-eradicate = ["+*"]
+flake8-isort = ["+*"]
+flake8-mutable = ["+*"]
+flake8-pytest-style = ["+*"]
+flake8-spellcheck = ["+*"]
+mccabe = ["+*"]
+pep8-naming = ["+*"]
+pycodestyle = ["+*", "-E203", "-W503"]
+pyflakes = ["+*", "-E203"]
+pylint = ["+*", "-E203"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
