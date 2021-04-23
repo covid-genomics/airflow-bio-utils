@@ -6,6 +6,7 @@ authors = ["Piotr Styczyński <piotr@styczynski.in>"]
 license = "MIT"
 
 [tool.poetry.scripts]
+publish = 'publish:publish'
 create-random-sequences = "airflow_bio_utils.cli.create_random_sequences:create_random_sequences_cli"
 filter-sequences = "airflow_bio_utils.cli.filter_sequences:filter_sequences_cli"
 merge-sequences = "airflow_bio_utils.cli.merge_sequences:merge_sequences_cli"
@@ -27,6 +28,8 @@ isort = "^5.7.0"
 black = "^20.8b1"
 pydoc-markdown = "^3.9.0"
 s3pypi = "^0.11.0"
+poetry-publish = "^0.4.1"
+bump2version = "^1.0.1"
 
 [tool.black]
 line-length = 79

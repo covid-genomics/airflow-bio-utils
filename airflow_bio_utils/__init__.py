@@ -14,3 +14,5 @@ __all__ = [
     "SequenceMergeOperator",
     "SequenceRandomOperator",
 ]
+
+__version__ = "0.1.0"
