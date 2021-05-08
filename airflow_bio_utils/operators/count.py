@@ -33,8 +33,8 @@ class SequenceCountOperator(PythonOperator):
         self.default_file_format = default_file_format
         self.callback = callback
 
-    def _execute_operator(self, *args, **kwargs):
-        self.callback(
+    def _execute_operator(self, *args, **kwargs) -> int:
+        return self.callback(
             count_sequences(
                 resolve_callable(self.sequences, *args, **kwargs),
                 resolve_callable(self.default_file_format, *args, **kwargs),

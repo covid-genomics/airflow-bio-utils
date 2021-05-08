@@ -2,6 +2,7 @@ from typing import Callable, Sequence, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
+from typing import Tuple
 
 from airflow_bio_utils.sequences.merge import merge_sequences
 
@@ -23,8 +24,8 @@ class SequenceMergeOperator(PythonOperator):
         self.paths = paths
         self.output_path = output_path
 
-    def _execute_operator(self, *args, **kwargs):
-        merge_sequences(
+    def _execute_operator(self, *args, **kwargs) -> Tuple[int, int]:
+        return merge_sequences(
             resolve_callable(self.paths, *args, **kwargs),
             resolve_callable(self.output_path, *args, **kwargs),
         )

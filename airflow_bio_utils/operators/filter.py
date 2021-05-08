@@ -2,6 +2,7 @@ from typing import Callable, List, Optional, Sequence, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
+from typing import List
 
 from airflow_bio_utils.sequences.filter import (DEFAULT_MAX_SEQ_LEN,
                                                 DEFAULT_MIN_SEQ_LEN,
@@ -42,8 +43,8 @@ class SequenceFilterOperator(PythonOperator):
         self.accepted_symbols = accepted_symbols
         self.output_paths = output_paths
 
-    def _execute_operator(self, *args, **kwargs):
-        filter_sequences(
+    def _execute_operator(self, *args, **kwargs) -> List[str]:
+        return filter_sequences(
             resolve_callable(self.input_paths, *args, **kwargs),
             min_seq_len=resolve_callable(self.min_seq_len, *args, **kwargs),
             max_seq_len=resolve_callable(self.max_seq_len, *args, **kwargs),
