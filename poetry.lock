@@ -380,7 +380,7 @@ crt = ["awscrt (==0.11.11)"]
 name = "bump2version"
 version = "1.0.1"
 description = "Version-bump your software with a single command!"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.5"
 
@@ -2070,7 +2070,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "597db9996c2b7771bfda468509ff94cf4eb1395676bf289b181af35a3e17d693"
+content-hash = "f3820c30ac55fb68c90b971f45d230751ad8b2ac6b38262b90dc43173a7d129f"
 
 [metadata.files]
 alembic = [
@@ -2141,6 +2141,11 @@ biopython = [
     {file = "biopython-1.78-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:ada611f12ee3b0bef7308ef41ee7b94898613b369ab44e0268d74bd1d6a06920"},
     {file = "biopython-1.78-cp38-cp38-win32.whl", hash = "sha256:48d424453a5512a1d1d41a4acabdfe5291da1f491a2d3606f2b0e4fbd63aeda6"},
     {file = "biopython-1.78-cp38-cp38-win_amd64.whl", hash = "sha256:2bd5a630be2a8e593094f7b1717fc962eda8931b68542b97fbf9bd8e2ac1e08d"},
+    {file = "biopython-1.78-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:b470c44d7a04e40a0cfc65853b1a5a6bf506a130c334cf4cffa05df07dbda366"},
+    {file = "biopython-1.78-cp39-cp39-manylinux1_i686.whl", hash = "sha256:c130c8e64ae2e4c7c73f0c24974ac8a832190cc3cf3c3c7b4aaffc974effc993"},
+    {file = "biopython-1.78-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:9b4374a47d924d4d4ffe2fea010ce75427bbfd92e45d50d5b1213a478baf680f"},
+    {file = "biopython-1.78-cp39-cp39-win32.whl", hash = "sha256:fe2bcf85d0f5f1888ed7d86c139e9d4e7d54e036c8ac54e929663d63548046a1"},
+    {file = "biopython-1.78-cp39-cp39-win_amd64.whl", hash = "sha256:6ed345b1ef100d58d8376e31c280b13fc87bb8f73ccc447f8140344991b61459"},
     {file = "biopython-1.78.tar.gz", hash = "sha256:1ee0a0b6c2376680fea6642d5080baa419fd73df104a62d58a8baf7a8bbe4564"},
 ]
 black = [
@@ -2961,7 +2966,8 @@ sqlalchemy-jsonfield = [
     {file = "SQLAlchemy_JSONField-1.0.0-py3-none-any.whl", hash = "sha256:db129c0e79f6b3c61ca88b340363e2cc2023a187a40b9992dfee33bc75c3a02c"},
 ]
 sqlalchemy-utils = [
-    {file = "SQLAlchemy_Utils-0.37.0-py2.py3-none-any.whl", hash = "sha256:c7bec2c982b31ec6133ba519f73f07653bbb7e7b3c23836bb8d9133045386b68"},
+    {file = "SQLAlchemy-Utils-0.37.0.tar.gz", hash = "sha256:58efe0c6961c688d444ba26e989ddacdf0df162ed91817d31dd73132b5a68636"},
+    {file = "SQLAlchemy_Utils-0.37.0-py3-none-any.whl", hash = "sha256:650534006910247670bd0ad0ad457944d6fc967f574165151f946b14d1ee823b"},
 ]
 swagger-ui-bundle = [
     {file = "swagger_ui_bundle-0.0.8-py3-none-any.whl", hash = "sha256:f5255f786cde67a2638111f4a7d04355836743198a83c4ecbe815d9fc384b0c8"},
