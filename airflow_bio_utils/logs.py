@@ -150,6 +150,23 @@ class UniversalLogger:
         """
         self._logger_instance.info(self._prefromat_message(message, "INFO"))
 
+    def error(self, message):
+        """
+        Log info message.
+
+        :param message: Message to be logged
+        """
+        self._logger_instance.info(self._prefromat_message(message, "ERROR"))
+
+    def fatal(self, message):
+        """
+        Log info message.
+
+        :param message: Message to be logged
+        """
+        self._logger_instance.info(self._prefromat_message(message, "ERROR"))
+        raise Exception("")
+
     def debug(self, message):
         """
         Log debug message.

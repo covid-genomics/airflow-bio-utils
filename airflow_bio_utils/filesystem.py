@@ -2,7 +2,7 @@
 from __future__ import annotations
 from fs import open_fs
 import tempfile
-from io import StringIO
+from io import StringIO, BytesIO
 import os
 import uuid
 from enum import Enum, unique
@@ -12,8 +12,10 @@ from dataclasses import dataclass
 
 
 def url_join_path(remote_url: str, *args: List[str]) -> str:
-    if remote_url.count("//") < 2:
-        remote_url = f"{remote_url}//"
+    if remote_url.count("//") == 0:
+        return f"file:////{os.path.join(remote_url, *args)}"
+    elif remote_url.count("//") == 1:
+        remote_url = f"{remote_url}//{os.path.join(remote_url, *args)}"
     return os.path.join(remote_url, *args)
 
 
@@ -22,6 +24,9 @@ class ReadMode(str, Enum):
     READ = "r"
     READ_MODIFY = "r+"
     WRITE = "w"
+    READ_BYTES = "rb"
+    READ_MODIFY_BYTES = "rb+"
+    WRITE_BYTES = "wb"
 
 
 @dataclass
@@ -54,6 +59,7 @@ class FileURL:
                 path=remote_url,
             )
         elif remote_url.count("//") == 1:
+            print(remote_url)
             [protocol, filesystem_config] = remote_url.split("://")
             return FileURL(
                 protocol=protocol,
@@ -121,6 +127,8 @@ class FileHandler:
         else:
             if self.mode == ReadMode.WRITE:
                 self.descriptor = StringIO("")
+            elif self.mode == ReadMode.WRITE_BYTES:
+                self.descriptor = BytesIO(b"")
             else:
                 with FileHandler.open_fs(self.url.fs_url) as fs:
                     self.descriptor = StringIO(fs.readtext(self.url.path))
@@ -139,6 +147,10 @@ class FileHandler:
                         fs.writebytes(self.url.path, self.descriptor.read().encode())
                     else:
                         fs.writetext(self.url.path, self.descriptor.read())
+            elif self.mode == ReadMode.WRITE_BYTES:
+                with FileHandler.open_fs(self.url.fs_url) as fs:
+                    self.descriptor.seek(0)
+                    fs.writebytes(self.url.path, self.descriptor.read())
             self.descriptor.close()
 
 
