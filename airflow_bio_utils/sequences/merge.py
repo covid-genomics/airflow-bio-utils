@@ -1,5 +1,6 @@
 from typing import Sequence, Tuple
 
+from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
 
 
@@ -18,14 +19,14 @@ def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
     all_sequences = set()
     number_of_all_sequences = 0
     number_of_output_sequences = 0
-    with open(output_path, "w") as output_file:
+    with open_url(output_path, "w") as output_file:
         for input_path in paths:
             add_line = False
             #
             # Perform manual FASTA parsing
             # This is done, because we don't want to load the sequence itself, just IDs and that way it's faster
             #
-            with open(input_path, "r") as input_file:
+            with open_url(input_path, "r") as input_file:
                 for line in LOGS.merge_sequences.progress(
                     input_file, message=f"Loading file {input_path}"
                 ):

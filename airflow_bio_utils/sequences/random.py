@@ -1,5 +1,6 @@
 from random import choice, randrange
 from typing import Callable, List, Optional, TextIO, Tuple
+from airflow_bio_utils.filesystem import open_url
 
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -122,7 +123,7 @@ def create_random_sequnce_records(
     If you specify output parameter the sequences are written to the file handle.
     For example:
 
-    with open('output.fasta', 'w') as out:
+    with open_url('output.fasta', 'w') as out:
         create_random_sequnce_records(output=out, output_mode='fasta', ...)
 
     The meta_generator is by default default_seq_meta_generator.
