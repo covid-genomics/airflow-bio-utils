@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from airflow_bio_utils.filesystem import open_url, ReadMode
 
 import mmap
 from typing import Optional
@@ -16,7 +17,7 @@ def get_file_lines_count(filename: str, text: Optional[str] = None) -> int:
     :param text: Optional text to match in counted lines
     :return: Number of counted lines
     """
-    f = open(filename, "r+")
+    f = open_url(filename, ReadMode.READ_MODIFY).local_file_descriptor
     buf = mmap.mmap(f.fileno(), 0)
     lines = 0
     readline = buf.readline

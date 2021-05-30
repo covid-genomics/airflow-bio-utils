@@ -6,24 +6,103 @@
 
 To install this module please do:
 ```bash
-   $ poetry install airflow-bio-utils@0.2.0
+   $ poetry install airflow-bio-utils@0.3.0
    # or
-   $ pip install airflow-bio-utils==0.2.0
+   $ pip install airflow-bio-utils==0.3.0
 ```
 
 ## Usage
 
 ### Airflow operators
 
-Example usage:
+#### Sequence merge
+
+`SequenceMergeOperator` takes input files and merges the sequences together.
+It provides efficient antiduplication mechanism to remove duplicate IDs.
+
+Merging sequences from local paths:
 ```python
 from airflow_bio_utils import SequenceMergeOperator
 
 merge_fasta_files = SequenceMergeOperator(
-    ['a.fasta', 'b.fasta'],
+    ['./a.fasta', 'b.fasta'],
     'output.fasta',
 )
+```
 
+Merging sequences from remote locations:
+```python
+from airflow_bio_utils import SequenceMergeOperator
+
+merge_fasta_files = SequenceMergeOperator(
+    [
+        "s3://bucket1//folder1/folder2/input1.fasta",
+        "s3://bucket1//folder1/folder2/input2.fasta",
+        "s3://other_bucket//some_folder/fasta_file.fasta",
+    ],
+    "s3://output_bucket/output.fasta",
+)
+```
+
+#### Generating random sequences
+
+`SequenceRandomOperator` can generate nucleotide or protein (translated) sequences with given lengths in given amounts.
+
+```python
+from airflow_bio_utils import SequenceRandomOperator
+
+random_sequence_generator_task = SequenceRandomOperator(
+    output="dvc://ssh@github.com/covid-genomics/data-artifacts//random.fasta",
+    count=130,
+    min_length=1000,
+    max_length=5000,
+)
+```
+
+#### Sequences metrics
+
+`SequenceMetricsOperator` allows you to measure qualities of `fastq` metrics, trace GC content, kmers and get other statistics.
+By default it generated PDF report.
+
+```python
+from airflow_bio_utils import SequenceMetricsOperator
+
+SequenceMetricsOperator(
+    input_path="some_input.fasta",
+    output_path="dvc://<PAT>@github.com/covid-genomics/data-artifacts//output_metrics",
+)
+```
+
+#### Sequence filtering
+
+`SequenceFilterOperator` allows you to remove sequences based on simple criteria like length or nucleotide contents.
+
+```python
+from airflow_bio_utils import SequenceFilterOperator
+
+SequenceFilterOperator(
+    input_paths=["a.fasta", "b.fasta"],
+    min_seq_len=1000,
+    accepted_symbols=["A", "C", "T", "G", "N"],
+    output_paths=["a_filtered.fasta", "b_filtered.fasta"],
+)
+```
+
+#### Sequence for each
+
+`SequenceForEachOperator` takes an action and executes it for each sequence.
+The action can return None or sequence and if you specify `output_path` parameter,
+all results will be saved into new fasta file.
+This makes `SequenceForEachOperator` foreach or map/filter operator.
+
+```python
+from airflow_bio_utils import SequenceForEachOperator
+
+task = SequenceForEachOperator(
+    sequences="sequences.fasta",
+    action=lambda seq: seq,
+    output_path="output.fasta",
+)
 ```
 
 ### CLI

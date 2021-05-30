@@ -1,7 +1,7 @@
 from . import cli, file_operations, logs, sequences
 from .operators import (SequenceCountOperator, SequenceFilterOperator,
                         SequenceForEachOperator, SequenceMergeOperator,
-                        SequenceRandomOperator)
+                        SequenceRandomOperator, SequenceMetricsOperator)
 
 __all__ = [
     "file_operations",
@@ -13,6 +13,7 @@ __all__ = [
     "SequenceForEachOperator",
     "SequenceMergeOperator",
     "SequenceRandomOperator",
+    "SequenceMetricsOperator",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Sequence, Union
+from typing import Any, Callable, Sequence, Union, Optional
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
@@ -15,7 +15,7 @@ class SequenceCountOperator(PythonOperator):
         Callable[..., Union[str, Sequence[SeqRecord]]],
     ]
     default_file_format: Union[str, Callable[..., str]] = "fasta"
-    callback: Callable[[int], Any]
+    callback: Optional[Callable[[int], Any]]
 
     @apply_defaults
     def __init__(
@@ -24,7 +24,7 @@ class SequenceCountOperator(PythonOperator):
             Union[str, Sequence[SeqRecord]],
             Callable[..., Union[str, Sequence[SeqRecord]]],
         ],
-        callback: Callable[[int], Any],
+        callback: Optional[Callable[[int], Any]] = None,
         default_file_format: Union[str, Callable[..., str]] = "fasta",
         **kwargs,
     ) -> None:
@@ -34,11 +34,16 @@ class SequenceCountOperator(PythonOperator):
         self.callback = callback
 
     def _execute_operator(self, *args, **kwargs) -> int:
-        return self.callback(
-            count_sequences(
-                resolve_callable(self.sequences, *args, **kwargs),
-                resolve_callable(self.default_file_format, *args, **kwargs),
-            ),
-            *args,
-            **kwargs,
+        seq_count = count_sequences(
+            resolve_callable(self.sequences, *args, **kwargs),
+            resolve_callable(self.default_file_format, *args, **kwargs),
         )
+        if self.callback:
+            return self.callback(
+                seq_count,
+                *args,
+                **kwargs,
+            )
+        else:
+            return seq_count
+

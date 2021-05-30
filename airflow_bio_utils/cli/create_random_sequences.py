@@ -1,4 +1,5 @@
 import click
+from airflow_bio_utils.filesystem import open_url
 
 from airflow_bio_utils.sequences.random import (NUCLEOTIDES_ACTG,
                                                 NUCLEOTIDES_FULL,
@@ -39,7 +40,7 @@ def create_random_sequences_cli(
     if nucleotides == "full":
         nucl = NUCLEOTIDES_FULL
 
-    with open(output_filename, "w") as output_file:
+    with open_url(output_filename, "w") as output_file:
         count = len(
             create_random_sequnce_records(
                 int(count),

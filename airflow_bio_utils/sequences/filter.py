@@ -2,6 +2,7 @@ from typing import List, Optional, Sequence
 
 from Bio.SeqRecord import SeqRecord
 
+from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
 from airflow_bio_utils.sequences.transformations import \
     perform_on_each_sequence
@@ -43,7 +44,7 @@ def filter_sequences(
         output_filename = f"{path}.filtered"
         if output_paths is not None:
             output_filename = output_paths[i]
-        with open(output_filename, "w") as f:
+        with open_url(output_filename, "w") as f:
 
             def filter_and_save_genome(record: SeqRecord):
                 """

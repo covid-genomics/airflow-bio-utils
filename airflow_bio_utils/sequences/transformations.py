@@ -1,9 +1,11 @@
 import collections
-from typing import Callable, Iterator, Sequence, Union
+from typing import Callable, Iterator, Sequence, Union, Optional, List
 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+
+from airflow_bio_utils.filesystem import open_url
 
 from airflow_bio_utils.file_operations import get_file_lines_count
 from airflow_bio_utils.logs import LOGS
@@ -145,9 +147,10 @@ def count_sequences(
 
 
 def perform_on_each_sequence(
-    action: Callable[[SeqRecord], None],
+    action: Callable[[SeqRecord], Optional[SeqRecord]],
     sequences: GenericSequences,
     default_file_format: str = "fasta",
+    output_path: Optional[str] = None,
 ) -> int:
     """
     Perform operation on each sequence record.
@@ -161,6 +164,7 @@ def perform_on_each_sequence(
     :param sequences: Path to the input file or raw input sequences
     :param default_file_format: Default file format to be used when loading a file
         Refer to the detect_sequences_format() for more details
+    :param output_path: Optional path to the output file with collected results
     :return: Number of processed genomes
     """
     records_count = 0
@@ -175,7 +179,15 @@ def perform_on_each_sequence(
                 sequences, default_file_format=default_file_format
             ),
         )
+    out_records: List[SeqRecord] = []
     for record in input_records:
         records_count = records_count + 1
-        action(record)
+        out = action(record)
+        if out is not None and output_path is not None:
+            out_records.append(out)
+    if output_path is not None:
+        with open_url(output_path, "w") as f:
+            for record in out_records:
+                print(f'>{record.id.replace(" ", "").rstrip()}', file=f)
+                print(str(record), file=f)
     return records_count
