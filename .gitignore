@@ -1,5 +1,7 @@
 .idea/
+airflow/
 **/__pycache__
 */__pycache__
 publish.log
 dist/
+.pytest_cache/

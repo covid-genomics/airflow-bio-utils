@@ -1,5 +1,5 @@
 from random import choice, randrange
-from typing import Callable, List, Optional, TextIO, Tuple
+from typing import Callable, List, Optional, TextIO, Tuple, Union, Optional
 from airflow_bio_utils.filesystem import open_url
 
 from Bio import SeqIO
@@ -40,7 +40,7 @@ def create_random_sequences(
     max_length: int = 100,
     translate: bool = False,
     nucleotides: Optional[List[Tuple[str, int]]] = None,
-) -> List[Seq]:
+) -> Union[List[Seq], str]:
     """
     Create list of random Seq objects.
 
