@@ -6,9 +6,9 @@
 
 To install this module please do:
 ```bash
-   $ poetry install airflow-bio-utils@0.2.0
+   $ poetry install airflow-bio-utils@0.3.0
    # or
-   $ pip install airflow-bio-utils==0.2.0
+   $ pip install airflow-bio-utils==0.3.0
 ```
 
 ## Usage
