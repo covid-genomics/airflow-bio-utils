@@ -3,6 +3,7 @@ from typing import Any, Callable, Sequence, Union, Optional
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
 from Bio.SeqRecord import SeqRecord
+from airflow_bio_utils.logs import LOGS
 
 from airflow_bio_utils.sequences.transformations import \
     perform_on_each_sequence
@@ -41,19 +42,23 @@ class SequenceForEachOperator(PythonOperator):
         self.output_path = output_path
 
     def _execute_operator(self, *args, **kwargs):
-        output = perform_on_each_sequence(
-            self.action,
-            resolve_callable(self.sequences, *args, **kwargs),
-            resolve_callable(self.default_file_format, *args, **kwargs),
-            output_path=resolve_callable(self.output_path, *args, **kwargs),
-        )
-
-        if self.callback:
-            return self.callback(
-                output,
-                *args,
-                **kwargs,
+        try:
+            output = perform_on_each_sequence(
+                self.action,
+                resolve_callable(self.sequences, *args, **kwargs),
+                resolve_callable(self.default_file_format, *args, **kwargs),
+                output_path=resolve_callable(self.output_path, *args, **kwargs),
             )
-        else:
-            return output
+
+            if self.callback:
+                return self.callback(
+                    output,
+                    *args,
+                    **kwargs,
+                )
+            else:
+                return output
+        except Exception as e:
+            LOGS.merge.error(str(e))
+            raise e
 

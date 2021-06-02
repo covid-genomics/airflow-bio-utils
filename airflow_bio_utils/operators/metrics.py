@@ -3,6 +3,7 @@ from typing import Callable, Sequence, Union
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
 from typing import Tuple, Optional, List
+from airflow_bio_utils.logs import LOGS
 
 from airflow_bio_utils.fasta_metrics import GeneFile
 from .utils import resolve_callable
@@ -109,34 +110,39 @@ class SequenceMetricsOperator(PythonOperator):
         
     
     def _execute_operator(self, *args, **kwargs):
-        GeneFile(resolve_callable(self.input_path, *args, **kwargs)).collect_metrics(
-            output=resolve_callable(self.output_path, *args, **kwargs),
-            quiet=resolve_callable(self.quiet, *args, **kwargs),
-            binsize=resolve_callable(self.binsize, *args, **kwargs),
-            name=resolve_callable(self.name, *args, **kwargs),
-            nreads=resolve_callable(self.nreads, *args, **kwargs),
-            base_probs=resolve_callable(self.base_probs, *args, **kwargs),
-            kmer=resolve_callable(self.kmer, *args, **kwargs),
-            debug_output=resolve_callable(self.debug_output, *args, **kwargs),
-            type=resolve_callable(self.type, *args, **kwargs),
-            leftlimit=resolve_callable(self.leftlimit, *args, **kwargs),
-            rightlimit=resolve_callable(self.rightlimit, *args, **kwargs),
-            median_qual=resolve_callable(self.median_qual, *args, **kwargs),
-            aligned_only=resolve_callable(self.aligned_only, *args, **kwargs),
-            unaligned_only=resolve_callable(self.unaligned_only, *args, **kwargs),
-            count_duplicates=resolve_callable(self.count_duplicates, *args, **kwargs),
-            output_plotly_json=resolve_callable(self.output_plotly_json, *args, **kwargs),
-            output_plotly_charts=resolve_callable(self.output_plotly_charts, *args, **kwargs),
-            output_matplot_images=resolve_callable(self.output_matplot_images, *args, **kwargs),
-            output_images=resolve_callable(self.output_images, *args, **kwargs),
-            output_csv=resolve_callable(self.output_csv, *args, **kwargs),
-            output_to=resolve_callable(self.output_to, *args, **kwargs),
-            examine_kmers=resolve_callable(self.examine_kmers, *args, **kwargs),
-            use_multiprocessing=resolve_callable(self.use_multiprocessing, *args, **kwargs),
-            read_multiprocessing_threshold=resolve_callable(self.read_multiprocessing_threshold, *args, **kwargs),
-            use_cache=resolve_callable(self.use_cache, *args, **kwargs),
-            calculated_data_cache_file=resolve_callable(self.calculated_data_cache_file, *args, **kwargs),
-            only_return_data=resolve_callable(self.only_return_data, *args, **kwargs),
-            figure_settings=resolve_callable(self.figure_settings, *args, **kwargs),
-            create_pdf=resolve_callable(self.create_pdf, *args, **kwargs),
-        )
+        try:
+            GeneFile(resolve_callable(self.input_path, *args, **kwargs)).collect_metrics(
+                output=resolve_callable(self.output_path, *args, **kwargs),
+                quiet=resolve_callable(self.quiet, *args, **kwargs),
+                binsize=resolve_callable(self.binsize, *args, **kwargs),
+                name=resolve_callable(self.name, *args, **kwargs),
+                nreads=resolve_callable(self.nreads, *args, **kwargs),
+                base_probs=resolve_callable(self.base_probs, *args, **kwargs),
+                kmer=resolve_callable(self.kmer, *args, **kwargs),
+                debug_output=resolve_callable(self.debug_output, *args, **kwargs),
+                type=resolve_callable(self.type, *args, **kwargs),
+                leftlimit=resolve_callable(self.leftlimit, *args, **kwargs),
+                rightlimit=resolve_callable(self.rightlimit, *args, **kwargs),
+                median_qual=resolve_callable(self.median_qual, *args, **kwargs),
+                aligned_only=resolve_callable(self.aligned_only, *args, **kwargs),
+                unaligned_only=resolve_callable(self.unaligned_only, *args, **kwargs),
+                count_duplicates=resolve_callable(self.count_duplicates, *args, **kwargs),
+                output_plotly_json=resolve_callable(self.output_plotly_json, *args, **kwargs),
+                output_plotly_charts=resolve_callable(self.output_plotly_charts, *args, **kwargs),
+                output_matplot_images=resolve_callable(self.output_matplot_images, *args, **kwargs),
+                output_images=resolve_callable(self.output_images, *args, **kwargs),
+                output_csv=resolve_callable(self.output_csv, *args, **kwargs),
+                output_to=resolve_callable(self.output_to, *args, **kwargs),
+                examine_kmers=resolve_callable(self.examine_kmers, *args, **kwargs),
+                use_multiprocessing=resolve_callable(self.use_multiprocessing, *args, **kwargs),
+                read_multiprocessing_threshold=resolve_callable(self.read_multiprocessing_threshold, *args, **kwargs),
+                use_cache=resolve_callable(self.use_cache, *args, **kwargs),
+                calculated_data_cache_file=resolve_callable(self.calculated_data_cache_file, *args, **kwargs),
+                only_return_data=resolve_callable(self.only_return_data, *args, **kwargs),
+                figure_settings=resolve_callable(self.figure_settings, *args, **kwargs),
+                create_pdf=resolve_callable(self.create_pdf, *args, **kwargs),
+            )
+        except Exception as e:
+            LOGS.merge.error(str(e))
+            raise e
+

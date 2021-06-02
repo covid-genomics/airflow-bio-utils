@@ -3,6 +3,7 @@ from typing import Any, Callable, Sequence, Union, Optional
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
 from Bio.SeqRecord import SeqRecord
+from airflow_bio_utils.logs import LOGS
 
 from airflow_bio_utils.sequences.transformations import count_sequences
 
@@ -34,16 +35,20 @@ class SequenceCountOperator(PythonOperator):
         self.callback = callback
 
     def _execute_operator(self, *args, **kwargs) -> int:
-        seq_count = count_sequences(
-            resolve_callable(self.sequences, *args, **kwargs),
-            resolve_callable(self.default_file_format, *args, **kwargs),
-        )
-        if self.callback:
-            return self.callback(
-                seq_count,
-                *args,
-                **kwargs,
+        try:
+            seq_count = count_sequences(
+                resolve_callable(self.sequences, *args, **kwargs),
+                resolve_callable(self.default_file_format, *args, **kwargs),
             )
-        else:
-            return seq_count
+            if self.callback:
+                return self.callback(
+                    seq_count,
+                    *args,
+                    **kwargs,
+                )
+            else:
+                return seq_count
+        except Exception as e:
+            LOGS.merge.error(str(e))
+            raise e
 
