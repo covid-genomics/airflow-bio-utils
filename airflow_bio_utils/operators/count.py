@@ -8,6 +8,7 @@ from airflow_bio_utils.logs import LOGS
 from airflow_bio_utils.sequences.transformations import count_sequences
 
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceCountOperator(PythonOperator):
@@ -49,6 +50,6 @@ class SequenceCountOperator(PythonOperator):
             else:
                 return seq_count
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e
 

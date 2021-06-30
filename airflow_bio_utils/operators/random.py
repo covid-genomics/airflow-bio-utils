@@ -8,6 +8,7 @@ from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
 
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceRandomOperator(PythonOperator):
@@ -73,5 +74,5 @@ class SequenceRandomOperator(PythonOperator):
                     nucleotides=nucleotides,
                 )
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e

@@ -10,6 +10,7 @@ from airflow_bio_utils.sequences.filter import (DEFAULT_MAX_SEQ_LEN,
                                                 filter_sequences)
 
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceFilterOperator(PythonOperator):
@@ -56,6 +57,6 @@ class SequenceFilterOperator(PythonOperator):
                 output_paths=resolve_callable(self.output_paths, *args, **kwargs),
             )
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e
 

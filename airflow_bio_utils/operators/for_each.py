@@ -9,6 +9,7 @@ from airflow_bio_utils.sequences.transformations import \
     perform_on_each_sequence
 
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceForEachOperator(PythonOperator):
@@ -59,6 +60,6 @@ class SequenceForEachOperator(PythonOperator):
             else:
                 return output
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e
 

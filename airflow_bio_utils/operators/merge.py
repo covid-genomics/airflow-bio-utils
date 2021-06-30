@@ -8,6 +8,7 @@ from airflow_bio_utils.sequences.merge import merge_sequences
 from airflow_bio_utils.logs import LOGS
 
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceMergeOperator(PythonOperator):
@@ -32,6 +33,6 @@ class SequenceMergeOperator(PythonOperator):
                 resolve_callable(self.output_path, *args, **kwargs),
             )
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e
 

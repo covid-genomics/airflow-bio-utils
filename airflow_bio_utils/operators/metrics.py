@@ -7,6 +7,7 @@ from airflow_bio_utils.logs import LOGS
 
 from airflow_bio_utils.fasta_metrics import GeneFile
 from .utils import resolve_callable
+import traceback
 
 
 class SequenceMetricsOperator(PythonOperator):
@@ -143,6 +144,6 @@ class SequenceMetricsOperator(PythonOperator):
                 create_pdf=resolve_callable(self.create_pdf, *args, **kwargs),
             )
         except Exception as e:
-            LOGS.merge.error(str(e))
+            LOGS.merge.error(traceback.format_exc())
             raise e
 
