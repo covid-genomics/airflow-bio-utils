@@ -19,14 +19,17 @@ def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
     all_sequences = set()
     number_of_all_sequences = 0
     number_of_output_sequences = 0
+    LOGS.merge_sequences.info(f"Open output file")
     with open_url(output_path, "w") as output_file:
         for input_path in paths:
+            LOGS.merge_sequences.info(f"Try to open input file {input_path}")
             add_line = False
             #
             # Perform manual FASTA parsing
             # This is done, because we don't want to load the sequence itself, just IDs and that way it's faster
             #
             with open_url(input_path, "r") as input_file:
+                LOGS.merge_sequences.info(f"Opened input file {input_path}")
                 for line in LOGS.merge_sequences.progress(
                     input_file, message=f"Loading file {input_path}"
                 ):
@@ -42,6 +45,7 @@ def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
                             all_sequences.add(line)
                     if add_line:
                         output_file.write(f"{line}\n")
+        LOGS.merge_sequences.info(f"Loaded all files. Saving output file.")
     LOGS.merge_sequences.info(
         f"Merged sequences to FASTA file. Input count: {number_of_all_sequences}. "
         f"Output count: {number_of_output_sequences}"
