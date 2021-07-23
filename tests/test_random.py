@@ -29,7 +29,7 @@ def test_random():
     seq_count = 0
     for header, seq in fasta_file.items():
         assert min_length <= len(seq) <= max_length
-        assert all(nucl in ["A", "C", "T", "G"] for nucl in seq)
+        assert all(nucl in ["A", "C", "T", "G", "N"] for nucl in seq)
         seq_count += 1
     assert seq_count == sequences_count
 

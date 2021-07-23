@@ -1,14 +1,13 @@
 import click
 
 from airflow_bio_utils.sequences.filter import (
-    DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS, DEFAULT_MAX_SEQ_LEN,
-    DEFAULT_MIN_SEQ_LEN, filter_sequences)
+    DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS, filter_sequences, FilterSymbols, FilterByLength)
 
 
 @click.command()
 @click.argument("paths", nargs=-1)
-@click.option("--min-seq-len", default=DEFAULT_MIN_SEQ_LEN, type=int)
-@click.option("--max-seq-len", default=DEFAULT_MAX_SEQ_LEN, type=int)
+@click.option("--min-seq-len", default=0, type=int)
+@click.option("--max-seq-len", default=50000, type=int)
 @click.option("--accepted-symbols", default=DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS)
 def filter_sequences_cli(paths, min_seq_len, max_seq_len, accepted_symbols):
     """
@@ -21,9 +20,13 @@ def filter_sequences_cli(paths, min_seq_len, max_seq_len, accepted_symbols):
     """
     return filter_sequences(
         input_paths=paths,
-        min_seq_len=min_seq_len,
-        max_seq_len=max_seq_len,
-        accepted_symbols=accepted_symbols,
+        filters=[
+            FilterSymbols(accepted_symbols),
+            FilterByLength(
+                min_length=min_seq_len,
+                max_length=max_seq_len,
+            ),
+        ],
     )
 
 
