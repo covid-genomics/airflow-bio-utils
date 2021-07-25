@@ -1,7 +1,8 @@
 import click
 
 from airflow_bio_utils.sequences.filter import (
-    DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS, filter_sequences, FilterSymbols, FilterByLength)
+    DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS, FilterByLength, FilterSymbols,
+    filter_sequences)
 
 
 @click.command()

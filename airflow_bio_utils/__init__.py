@@ -1,8 +1,12 @@
 from . import cli, file_operations, logs, sequences
-from .operators import (SequenceCountOperator, SequenceFilterOperator,
-                        SequenceForEachOperator, SequenceMergeOperator,
-                        SequenceRandomOperator, SequenceMetricsOperator, FilterResultsMetadata)
-from .sequences.filter import FilterCondition, FilterByLength, FilterSymbolQuantity, FilterSymbols, DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS, FilterResultsMetadata
+from .operators import (FilterResultsMetadata, SequenceCountOperator,
+                        SequenceFilterOperator, SequenceForEachOperator,
+                        SequenceMergeOperator, SequenceMetricsOperator,
+                        SequenceRandomOperator)
+from .sequences.filter import (DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS,
+                               FilterByLength, FilterCondition,
+                               FilterResultsMetadata, FilterSymbolQuantity,
+                               FilterSymbols)
 
 __all__ = [
     "file_operations",
@@ -20,7 +24,7 @@ __all__ = [
     "FilterSymbolQuantity",
     "FilterSymbols",
     "DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS",
-    "FilterResultsMetadata"
+    "FilterResultsMetadata",
 ]
 
 __version__ = "0.5.7"

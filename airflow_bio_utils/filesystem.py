@@ -1,14 +1,15 @@
-
 from __future__ import annotations
-from fs import open_fs
-import tempfile
-from io import StringIO, BytesIO
+
 import os
+import tempfile
 import uuid
-from enum import Enum, unique
-from typing import List, Optional
-from pathlib import Path
 from dataclasses import dataclass
+from enum import Enum, unique
+from io import BytesIO, StringIO
+from pathlib import Path
+from typing import List, Optional
+
+from fs import open_fs
 
 
 def url_join_path(remote_url: str, *args: List[str]) -> str:
@@ -67,7 +68,7 @@ class FileURL:
                 path="",
             )
         else:
-            fs_url, _, fs_dir = remote_url.rpartition('//')
+            fs_url, _, fs_dir = remote_url.rpartition("//")
             [protocol, filesystem_config] = fs_url.split("://")
             return FileURL(
                 protocol=protocol,
@@ -114,6 +115,7 @@ class FileHandler:
         if url.startswith("s3://"):
             bucket_name = url.replace("s3://", "").split("?")[0]
             from fs_s3fs import S3FS
+
             # Fix for S3FS, because we don't need to validate directories strictly
             # It speeds up everything
             return S3FS(bucket_name, strict=False)
@@ -144,7 +146,9 @@ class FileHandler:
                     if self.url.protocol == "s3":
                         # writetext(...) has bug with strict=False for S3FS
                         # so we use writebytes
-                        fs.writebytes(self.url.path, self.descriptor.read().encode())
+                        fs.writebytes(
+                            self.url.path, self.descriptor.read().encode()
+                        )
                     else:
                         fs.writetext(self.url.path, self.descriptor.read())
             elif self.mode == ReadMode.WRITE_BYTES:

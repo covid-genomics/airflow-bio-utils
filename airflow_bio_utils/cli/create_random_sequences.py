@@ -1,6 +1,6 @@
 import click
-from airflow_bio_utils.filesystem import open_url
 
+from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.sequences.random import (NUCLEOTIDES_ACTG,
                                                 NUCLEOTIDES_FULL,
                                                 create_random_sequnce_records)

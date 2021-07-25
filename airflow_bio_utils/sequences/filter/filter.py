@@ -1,14 +1,14 @@
-from typing import List, Optional, Sequence, Dict
-from dataclasses import dataclass
-
 from collections import defaultdict
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Sequence
+
 from Bio.SeqRecord import SeqRecord
 
 from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
+from airflow_bio_utils.sequences.filter.condition import FilterCondition
 from airflow_bio_utils.sequences.transformations import \
     perform_on_each_sequence
-from airflow_bio_utils.sequences.filter.condition import FilterCondition
 
 
 @dataclass(frozen=True)
@@ -19,6 +19,7 @@ class FilterResultsMetadata:
     accepted_sequences: int
     input_sequences: int
     percent_of_accepted_sequences: float
+
 
 def filter_sequences(
     input_paths: Sequence[str],
@@ -62,7 +63,7 @@ def filter_sequences(
 
                 if reject_reason is None:
                     valid_genomes += 1
-                    print(record.format("fasta"), file=f, end='')
+                    print(record.format("fasta"), file=f, end="")
                 else:
                     rejected_reasons[reject_reason] += 1
 
@@ -75,12 +76,14 @@ def filter_sequences(
                 valid_genomes, percent_of_valid
             )
         )
-        output_metadata.append(FilterResultsMetadata(
-            path,
-            output_filename,
-            rejected_reasons,
-            valid_genomes,
-            all_genomes,
-            percent_of_valid,
-        ))
+        output_metadata.append(
+            FilterResultsMetadata(
+                path,
+                output_filename,
+                rejected_reasons,
+                valid_genomes,
+                all_genomes,
+                percent_of_valid,
+            )
+        )
     return output_metadata

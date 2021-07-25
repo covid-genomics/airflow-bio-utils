@@ -1,11 +1,12 @@
-import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "helpers"))
 
 import biotite.sequence.io.fasta as fasta
-
 from dag_tests import execute_test_task
-from airflow_bio_utils import SequenceRandomOperator, SequenceCountOperator
+
+from airflow_bio_utils import SequenceCountOperator, SequenceRandomOperator
 
 
 def test_random():
@@ -32,4 +33,3 @@ def test_random():
         assert all(nucl in ["A", "C", "T", "G", "N"] for nucl in seq)
         seq_count += 1
     assert seq_count == sequences_count
-

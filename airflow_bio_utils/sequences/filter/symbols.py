@@ -1,6 +1,8 @@
-from airflow_bio_utils.sequences.filter.condition import FilterCondition
+from typing import List, Literal, Optional, Union
+
 from Bio.SeqRecord import SeqRecord
-from typing import Optional, List, Union, Literal
+
+from airflow_bio_utils.sequences.filter.condition import FilterCondition
 
 DEFAULT_ACCEPTED_SEQUENCE_SYMBOLS = ["A", "C", "T", "G", "N"]
 
@@ -52,4 +54,3 @@ class FilterSymbolQuantity(FilterCondition):
             return symbol_count <= self.quantity
         if self.compare_method == "GT":
             return symbol_count >= self.quantity
-

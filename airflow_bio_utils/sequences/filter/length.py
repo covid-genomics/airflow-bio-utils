@@ -1,6 +1,8 @@
-from airflow_bio_utils.sequences.filter.condition import FilterCondition
-from Bio.SeqRecord import SeqRecord
 from typing import Optional
+
+from Bio.SeqRecord import SeqRecord
+
+from airflow_bio_utils.sequences.filter.condition import FilterCondition
 
 
 class FilterByLength(FilterCondition):
@@ -23,4 +25,3 @@ class FilterByLength(FilterCondition):
 
     def check(self, record: SeqRecord) -> bool:
         return self.max_length >= len(record) >= self.min_length
-

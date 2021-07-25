@@ -1,14 +1,13 @@
+import traceback
 from typing import Callable, List, Optional, Tuple, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
-
-from airflow_bio_utils.sequences.random import create_random_sequnce_records
 from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
+from airflow_bio_utils.sequences.random import create_random_sequnce_records
 
 from .utils import resolve_callable
-import traceback
 
 
 class SequenceRandomOperator(PythonOperator):

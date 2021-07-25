@@ -1,20 +1,21 @@
+import traceback
 from typing import Callable, List, Optional, Sequence, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
-from typing import List
 from airflow_bio_utils.logs import LOGS
-
 from airflow_bio_utils.sequences.filter import (FilterCondition,
-                                                filter_sequences, FilterResultsMetadata)
+                                                FilterResultsMetadata,
+                                                filter_sequences)
 
 from .utils import resolve_callable
-import traceback
 
 
 class SequenceFilterOperator(PythonOperator):
     input_paths: Union[str, Sequence[str], Callable[..., Sequence[str]]]
-    filters: Union[Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]]
+    filters: Union[
+        Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]
+    ]
     output_paths: Union[
         Optional[Sequence[str]], Callable[..., Optional[Sequence[str]]]
     ]
@@ -23,7 +24,9 @@ class SequenceFilterOperator(PythonOperator):
     def __init__(
         self,
         input_paths: Union[str, Sequence[str], Callable[..., Sequence[str]]],
-        filters: Union[Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]],
+        filters: Union[
+            Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]
+        ],
         output_paths: Union[
             Optional[Sequence[str]], Callable[..., Optional[Sequence[str]]]
         ] = None,
@@ -34,7 +37,9 @@ class SequenceFilterOperator(PythonOperator):
         self.output_paths = output_paths
         self.filters = filters
 
-    def _execute_operator(self, *args, **kwargs) -> List[FilterResultsMetadata]:
+    def _execute_operator(
+        self, *args, **kwargs
+    ) -> List[FilterResultsMetadata]:
         try:
             input_paths = resolve_callable(self.input_paths, *args, **kwargs)
             if isinstance(input_paths, str):
@@ -51,4 +56,3 @@ class SequenceFilterOperator(PythonOperator):
         except Exception as e:
             LOGS.merge.error(traceback.format_exc())
             raise e
-

@@ -1,12 +1,16 @@
-import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+import sys
 
-import biotite.sequence.io.fasta as fasta
+sys.path.append(os.path.join(os.path.dirname(__file__), "helpers"))
+
 from typing import List
 
+import biotite.sequence.io.fasta as fasta
 from dag_tests import execute_test_task
-from airflow_bio_utils import SequenceRandomOperator, SequenceFilterOperator, FilterResultsMetadata, FilterSymbols, FilterByLength
+
+from airflow_bio_utils import (FilterByLength, FilterResultsMetadata,
+                               FilterSymbols, SequenceFilterOperator,
+                               SequenceRandomOperator)
 
 
 def test_filter():
@@ -18,8 +22,8 @@ def test_filter():
         SequenceRandomOperator,
         output=output_file_path,
         count=sequences_count,
-        min_length=min_length-5,
-        max_length=max_length+5,
+        min_length=min_length - 5,
+        max_length=max_length + 5,
     )
     filter_metadata: List[FilterResultsMetadata] = execute_test_task(
         SequenceFilterOperator,
@@ -41,5 +45,6 @@ def test_filter():
         seq_count += 1
     assert seq_count == filter_metadata[0].accepted_sequences
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_filter()
