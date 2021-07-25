@@ -114,8 +114,7 @@ def load_sequences(
         default_file_format = detect_sequences_format(
             sequences, default_file_format
         )
-        with open_url(sequences, "r") as input_file:
-            return SeqIO.parse(input_file, default_file_format)
+        return SeqIO.parse(open_url(sequences).local_file_path, default_file_format)
     return convert_to_biopython_sequences(sequences)
 
 
