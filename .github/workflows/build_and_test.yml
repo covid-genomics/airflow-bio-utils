@@ -34,6 +34,19 @@ jobs:
         run: poetry install --no-interaction
       - name: Install DVC
         run: pip install 'dvc[s3]'
+      - name: Initialize Airflow
+        run: |
+          export AIRFLOW_HOME=$(pwd)/airflow
+          export AIRFLOW_CONFIG=$AIRFLOW_HOME/airflow.cfg
+          mkdir -p $AIRFLOW_HOME > /dev/null 2> /dev/null
+          poetry run airflow db init
+          poetry run airflow users create \
+              --username admin \
+              --firstname Peter \
+              --lastname Parker \
+              --role Admin \
+              --email spiderman@superhero.org \
+              --password admin
       - name: Run tests
         env:
           DVC_GITHUB_REPO_TOKEN: ${{ secrets.DVC_GITHUB_REPO_TOKEN }}
