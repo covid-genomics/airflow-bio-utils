@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airflow_bio_utils"
-version = "0.5.1"
+version = "0.5.7"
 description = "Airflow utilities for biological sequences"
 authors = ["Piotr Styczyński <piotr@styczynski.in>"]
 license = "MIT"
@@ -27,7 +27,7 @@ apache-airflow = ">=2.0.0"
 bump2version = "^1.0.1"
 fs = "^2.4.13"
 fs-s3fs = "^1.1.1"
-dvc-fs = "^0.7.0"
+dvc-fs = "^0.7.2"
 biotite = "^0.27.0"
 numpy = "^1.20.3"
 scipy = "^1.6.3"
@@ -68,7 +68,7 @@ exclude = '''
 '''
 
 [tool.flakehell]
-exclude = ["README.rst", "README.md"]
+exclude = ["README.rst", "README.md", "venv"]
 format = "colored"
 max_line_length = 120
 show_source = true

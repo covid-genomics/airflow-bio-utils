@@ -1,8 +1,10 @@
-import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "helpers"))
 
 from dag_tests import execute_test_task
+
 from airflow_bio_utils import SequenceMetricsOperator, SequenceRandomOperator
 
 
@@ -23,8 +25,5 @@ def test_metrics():
         input_path=test_file_path,
         output_path=output_path,
     )
-
-if __name__ == '__main__':
-    test_metrics()
 
 

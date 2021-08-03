@@ -1,13 +1,12 @@
 import collections
-from typing import Callable, Iterator, Sequence, Union, Optional, List
+from typing import Callable, Iterator, List, Optional, Sequence, Union
 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from airflow_bio_utils.filesystem import open_url
-
 from airflow_bio_utils.file_operations import get_file_lines_count
+from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
 
 # Generic sequence that can be anything that is string or biopython sequence-like
@@ -114,7 +113,9 @@ def load_sequences(
         default_file_format = detect_sequences_format(
             sequences, default_file_format
         )
-        return SeqIO.parse(sequences, default_file_format)
+        return SeqIO.parse(
+            open_url(sequences).local_file_path, default_file_format
+        )
     return convert_to_biopython_sequences(sequences)
 
 

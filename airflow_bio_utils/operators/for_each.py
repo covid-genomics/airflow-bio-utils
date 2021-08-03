@@ -1,15 +1,15 @@
-from typing import Any, Callable, Sequence, Union, Optional
+import traceback
+from typing import Any, Callable, Optional, Sequence, Union
+
+from Bio.SeqRecord import SeqRecord
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
-from Bio.SeqRecord import SeqRecord
 from airflow_bio_utils.logs import LOGS
-
 from airflow_bio_utils.sequences.transformations import \
     perform_on_each_sequence
 
 from .utils import resolve_callable
-import traceback
 
 
 class SequenceForEachOperator(PythonOperator):
@@ -48,7 +48,9 @@ class SequenceForEachOperator(PythonOperator):
                 self.action,
                 resolve_callable(self.sequences, *args, **kwargs),
                 resolve_callable(self.default_file_format, *args, **kwargs),
-                output_path=resolve_callable(self.output_path, *args, **kwargs),
+                output_path=resolve_callable(
+                    self.output_path, *args, **kwargs
+                ),
             )
 
             if self.callback:
@@ -62,4 +64,3 @@ class SequenceForEachOperator(PythonOperator):
         except Exception as e:
             LOGS.merge.error(traceback.format_exc())
             raise e
-

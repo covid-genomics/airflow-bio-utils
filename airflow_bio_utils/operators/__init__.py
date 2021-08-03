@@ -1,9 +1,9 @@
 from .count import SequenceCountOperator
-from .filter import SequenceFilterOperator
+from .filter import FilterResultsMetadata, SequenceFilterOperator
 from .for_each import SequenceForEachOperator
 from .merge import SequenceMergeOperator
-from .random import SequenceRandomOperator
 from .metrics import SequenceMetricsOperator
+from .random import SequenceRandomOperator
 
 __all__ = [
     "SequenceCountOperator",
@@ -12,4 +12,5 @@ __all__ = [
     "SequenceMergeOperator",
     "SequenceRandomOperator",
     "SequenceMetricsOperator",
+    "FilterResultsMetadata",
 ]

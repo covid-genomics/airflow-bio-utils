@@ -1,13 +1,12 @@
-from typing import Callable, Sequence, Union
+import traceback
+from typing import Callable, List, Optional, Sequence, Tuple, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
-from typing import Tuple, Optional, List
+from airflow_bio_utils.fasta_metrics import GeneFile
 from airflow_bio_utils.logs import LOGS
 
-from airflow_bio_utils.fasta_metrics import GeneFile
 from .utils import resolve_callable
-import traceback
 
 
 class SequenceMetricsOperator(PythonOperator):
@@ -17,7 +16,9 @@ class SequenceMetricsOperator(PythonOperator):
     binsize: Union[int, Callable[..., int]]
     name: Union[str, Callable[..., str]]
     nreads: Union[int, Callable[..., int]]
-    base_probs: Union[Optional[List[float]], Callable[..., Optional[List[float]]]]
+    base_probs: Union[
+        Optional[List[float]], Callable[..., Optional[List[float]]]
+    ]
     kmer: Union[int, Callable[..., int]]
     debug_output: Union[str, Callable[..., str]]
     type: Union[Optional[str], Callable[..., Optional[str]]]
@@ -51,9 +52,11 @@ class SequenceMetricsOperator(PythonOperator):
         binsize: Union[int, Callable[..., int]] = 0,
         name: Union[str, Callable[..., str]] = None,
         nreads: Union[int, Callable[..., int]] = 2000000,
-        base_probs: Union[Optional[List[float]], Callable[..., Optional[List[float]]]] = None,
+        base_probs: Union[
+            Optional[List[float]], Callable[..., Optional[List[float]]]
+        ] = None,
         kmer: Union[int, Callable[..., int]] = 5,
-        debug_output: Union[str, Callable[..., str]] = '-',
+        debug_output: Union[str, Callable[..., str]] = "-",
         type: Union[Optional[str], Callable[..., Optional[str]]] = None,
         leftlimit: Union[int, Callable[..., int]] = 1,
         rightlimit: Union[int, Callable[..., int]] = -1,
@@ -66,14 +69,18 @@ class SequenceMetricsOperator(PythonOperator):
         output_matplot_images: Union[bool, Callable[..., bool]] = False,
         output_images: Union[bool, Callable[..., bool]] = False,
         output_csv: Union[bool, Callable[..., bool]] = False,
-        output_to: Union[str, Callable[..., str]] = 'memory',
+        output_to: Union[str, Callable[..., str]] = "memory",
         examine_kmers: Union[str, Callable[..., str]] = False,
         use_multiprocessing: Union[str, Callable[..., str]] = True,
         read_multiprocessing_threshold: Union[int, Callable[..., int]] = 10000,
         use_cache: Union[bool, Callable[..., bool]] = False,
-        calculated_data_cache_file: Union[str, Callable[..., str]] = 'calculated_data.pickle',
+        calculated_data_cache_file: Union[
+            str, Callable[..., str]
+        ] = "calculated_data.pickle",
         only_return_data: Union[bool, Callable[..., bool]] = False,
-        figure_settings: Union[Optional[dict], Callable[..., Optional[dict]]] = None,
+        figure_settings: Union[
+            Optional[dict], Callable[..., Optional[dict]]
+        ] = None,
         create_pdf: Union[bool, Callable[..., bool]] = True,
         **kwargs,
     ) -> None:
@@ -108,11 +115,12 @@ class SequenceMetricsOperator(PythonOperator):
         self.only_return_data = only_return_data
         self.figure_settings = figure_settings
         self.create_pdf = create_pdf
-        
-    
+
     def _execute_operator(self, *args, **kwargs):
         try:
-            GeneFile(resolve_callable(self.input_path, *args, **kwargs)).collect_metrics(
+            GeneFile(
+                resolve_callable(self.input_path, *args, **kwargs)
+            ).collect_metrics(
                 output=resolve_callable(self.output_path, *args, **kwargs),
                 quiet=resolve_callable(self.quiet, *args, **kwargs),
                 binsize=resolve_callable(self.binsize, *args, **kwargs),
@@ -120,30 +128,59 @@ class SequenceMetricsOperator(PythonOperator):
                 nreads=resolve_callable(self.nreads, *args, **kwargs),
                 base_probs=resolve_callable(self.base_probs, *args, **kwargs),
                 kmer=resolve_callable(self.kmer, *args, **kwargs),
-                debug_output=resolve_callable(self.debug_output, *args, **kwargs),
+                debug_output=resolve_callable(
+                    self.debug_output, *args, **kwargs
+                ),
                 type=resolve_callable(self.type, *args, **kwargs),
                 leftlimit=resolve_callable(self.leftlimit, *args, **kwargs),
                 rightlimit=resolve_callable(self.rightlimit, *args, **kwargs),
-                median_qual=resolve_callable(self.median_qual, *args, **kwargs),
-                aligned_only=resolve_callable(self.aligned_only, *args, **kwargs),
-                unaligned_only=resolve_callable(self.unaligned_only, *args, **kwargs),
-                count_duplicates=resolve_callable(self.count_duplicates, *args, **kwargs),
-                output_plotly_json=resolve_callable(self.output_plotly_json, *args, **kwargs),
-                output_plotly_charts=resolve_callable(self.output_plotly_charts, *args, **kwargs),
-                output_matplot_images=resolve_callable(self.output_matplot_images, *args, **kwargs),
-                output_images=resolve_callable(self.output_images, *args, **kwargs),
+                median_qual=resolve_callable(
+                    self.median_qual, *args, **kwargs
+                ),
+                aligned_only=resolve_callable(
+                    self.aligned_only, *args, **kwargs
+                ),
+                unaligned_only=resolve_callable(
+                    self.unaligned_only, *args, **kwargs
+                ),
+                count_duplicates=resolve_callable(
+                    self.count_duplicates, *args, **kwargs
+                ),
+                output_plotly_json=resolve_callable(
+                    self.output_plotly_json, *args, **kwargs
+                ),
+                output_plotly_charts=resolve_callable(
+                    self.output_plotly_charts, *args, **kwargs
+                ),
+                output_matplot_images=resolve_callable(
+                    self.output_matplot_images, *args, **kwargs
+                ),
+                output_images=resolve_callable(
+                    self.output_images, *args, **kwargs
+                ),
                 output_csv=resolve_callable(self.output_csv, *args, **kwargs),
                 output_to=resolve_callable(self.output_to, *args, **kwargs),
-                examine_kmers=resolve_callable(self.examine_kmers, *args, **kwargs),
-                use_multiprocessing=resolve_callable(self.use_multiprocessing, *args, **kwargs),
-                read_multiprocessing_threshold=resolve_callable(self.read_multiprocessing_threshold, *args, **kwargs),
+                examine_kmers=resolve_callable(
+                    self.examine_kmers, *args, **kwargs
+                ),
+                use_multiprocessing=resolve_callable(
+                    self.use_multiprocessing, *args, **kwargs
+                ),
+                read_multiprocessing_threshold=resolve_callable(
+                    self.read_multiprocessing_threshold, *args, **kwargs
+                ),
                 use_cache=resolve_callable(self.use_cache, *args, **kwargs),
-                calculated_data_cache_file=resolve_callable(self.calculated_data_cache_file, *args, **kwargs),
-                only_return_data=resolve_callable(self.only_return_data, *args, **kwargs),
-                figure_settings=resolve_callable(self.figure_settings, *args, **kwargs),
+                calculated_data_cache_file=resolve_callable(
+                    self.calculated_data_cache_file, *args, **kwargs
+                ),
+                only_return_data=resolve_callable(
+                    self.only_return_data, *args, **kwargs
+                ),
+                figure_settings=resolve_callable(
+                    self.figure_settings, *args, **kwargs
+                ),
                 create_pdf=resolve_callable(self.create_pdf, *args, **kwargs),
             )
         except Exception as e:
             LOGS.merge.error(traceback.format_exc())
             raise e
-

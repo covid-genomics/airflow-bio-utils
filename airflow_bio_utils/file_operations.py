@@ -1,8 +1,9 @@
 from __future__ import with_statement
-from airflow_bio_utils.filesystem import open_url, ReadMode
 
 import mmap
 from typing import Optional
+
+from airflow_bio_utils.filesystem import ReadMode, open_url
 
 
 def get_file_lines_count(filename: str, text: Optional[str] = None) -> int:

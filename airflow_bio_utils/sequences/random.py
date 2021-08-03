@@ -1,10 +1,11 @@
 from random import choice, randrange
-from typing import Callable, List, Optional, TextIO, Tuple, Union, Optional
-from airflow_bio_utils.filesystem import open_url
+from typing import Callable, List, Optional, TextIO, Tuple, Union
 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+
+from airflow_bio_utils.filesystem import open_url
 
 # Weight of generated nucleotides for ACTG
 NUCLEOTIDES_ACTG = [("C", 10), ("G", 20), ("A", 40), ("T", 30)]

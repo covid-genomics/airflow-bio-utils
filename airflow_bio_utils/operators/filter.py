@@ -1,24 +1,20 @@
+import traceback
 from typing import Callable, List, Optional, Sequence, Union
 
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.decorators import apply_defaults
-from typing import List
 from airflow_bio_utils.logs import LOGS
-
-from airflow_bio_utils.sequences.filter import (DEFAULT_MAX_SEQ_LEN,
-                                                DEFAULT_MIN_SEQ_LEN,
+from airflow_bio_utils.sequences.filter import (FilterCondition,
+                                                FilterResultsMetadata,
                                                 filter_sequences)
 
 from .utils import resolve_callable
-import traceback
 
 
 class SequenceFilterOperator(PythonOperator):
-    input_paths: Union[Sequence[str], Callable[..., Sequence[str]]]
-    min_seq_len: Union[int, Callable[..., int]]
-    max_seq_len: Union[int, Callable[..., int]]
-    accepted_symbols: Union[
-        Optional[List[str]], Callable[..., Optional[List[str]]]
+    input_paths: Union[str, Sequence[str], Callable[..., Sequence[str]]]
+    filters: Union[
+        Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]
     ]
     output_paths: Union[
         Optional[Sequence[str]], Callable[..., Optional[Sequence[str]]]
@@ -27,12 +23,10 @@ class SequenceFilterOperator(PythonOperator):
     @apply_defaults
     def __init__(
         self,
-        input_paths: Union[Sequence[str], Callable[..., Sequence[str]]],
-        min_seq_len: Union[int, Callable[..., int]] = DEFAULT_MIN_SEQ_LEN,
-        max_seq_len: Union[int, Callable[..., int]] = DEFAULT_MAX_SEQ_LEN,
-        accepted_symbols: Union[
-            Optional[List[str]], Callable[..., Optional[List[str]]]
-        ] = None,
+        input_paths: Union[str, Sequence[str], Callable[..., Sequence[str]]],
+        filters: Union[
+            Sequence[FilterCondition], Callable[..., Sequence[FilterCondition]]
+        ],
         output_paths: Union[
             Optional[Sequence[str]], Callable[..., Optional[Sequence[str]]]
         ] = None,
@@ -40,23 +34,25 @@ class SequenceFilterOperator(PythonOperator):
     ) -> None:
         super().__init__(**kwargs, python_callable=self._execute_operator)
         self.input_paths = input_paths
-        self.min_seq_len = min_seq_len
-        self.max_seq_len = max_seq_len
-        self.accepted_symbols = accepted_symbols
         self.output_paths = output_paths
+        self.filters = filters
 
-    def _execute_operator(self, *args, **kwargs) -> List[str]:
+    def _execute_operator(
+        self, *args, **kwargs
+    ) -> List[FilterResultsMetadata]:
         try:
+            input_paths = resolve_callable(self.input_paths, *args, **kwargs)
+            if isinstance(input_paths, str):
+                input_paths = [input_paths]
+            output_paths = resolve_callable(self.output_paths, *args, **kwargs)
+            if isinstance(output_paths, str):
+                output_paths = [output_paths]
+            filters = resolve_callable(self.filters, *args, **kwargs)
             return filter_sequences(
-                resolve_callable(self.input_paths, *args, **kwargs),
-                min_seq_len=resolve_callable(self.min_seq_len, *args, **kwargs),
-                max_seq_len=resolve_callable(self.max_seq_len, *args, **kwargs),
-                accepted_symbols=resolve_callable(
-                    self.accepted_symbols, *args, **kwargs
-                ),
-                output_paths=resolve_callable(self.output_paths, *args, **kwargs),
+                input_paths,
+                filters=filters,
+                output_paths=output_paths,
             )
         except Exception as e:
             LOGS.merge.error(traceback.format_exc())
             raise e
-
