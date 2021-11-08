@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airflow_bio_utils"
-version = "version = "0.6.0""
+version = "0.6.0"
 description = "Airflow utilities for biological sequences"
 authors = ["Piotr Styczyński <piotr@styczynski.in>"]
 license = "MIT"
