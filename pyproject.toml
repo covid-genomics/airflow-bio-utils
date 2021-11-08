@@ -37,6 +37,7 @@ simplesam = "^0.1.3"
 pybloom3 = "^0.0.3"
 fpdf = "^1.7.2"
 Pillow = "^8.2.0"
+sqlitedict = "^1.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"

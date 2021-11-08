@@ -1,22 +1,35 @@
 from typing import Sequence, Tuple
 
+from sqlitedict import SqliteDict
+
 from airflow_bio_utils.filesystem import open_url
 from airflow_bio_utils.logs import LOGS
 
 
-def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
+def merge_sequences(
+    paths: Sequence[str],
+    output_path: str,
+    deduplicate: bool = True,
+    large_input: bool = False,
+) -> Tuple[int, int]:
     """
     Merge multiple files with sequences into one single FASTA file.
     All sequences are deduplicated using sequence IDs.
 
     :param paths: Input paths to merge
     :param output_path: Path to the created output FASTA file
+    :param deduplicate: Should remove sequences duplicates
+    :param large_input: Use when dealing with +1GB input files and limited RAM memory to prevent
+        Python out of memory issues. This option worksonly if deduplicate is set to True
+        and changes set implementation to sqlite interface to store keys on disc.
     :return: Tuple of integers: (number_of_all_sequences, number_of_output_sequences)
     """
     LOGS.merge_sequences.info(f"Merge sequences {paths} -> {output_path}")
 
     # Capture set with all of the sequence IDs
     all_sequences = set()
+    if large_input:
+        all_sequences = SqliteDict("./merge.keystore.sqlite", autocommit=True)
     number_of_all_sequences = 0
     number_of_output_sequences = 0
     LOGS.merge_sequences.info(f"Open output file")
@@ -37,12 +50,16 @@ def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
                     if ">" in line:
                         number_of_all_sequences = number_of_all_sequences + 1
                         add_line = False
-                        if line not in all_sequences:
+                        if line not in all_sequences or not deduplicate:
                             add_line = True
                             number_of_output_sequences = (
                                 number_of_output_sequences + 1
                             )
-                            all_sequences.add(line)
+                            if deduplicate:
+                                if large_input:
+                                    all_sequences[line] = True
+                                else:
+                                    all_sequences.add(line)
                     if add_line:
                         output_file.write(f"{line}\n")
         LOGS.merge_sequences.info(f"Loaded all files. Saving output file.")
@@ -54,4 +71,8 @@ def merge_sequences(paths: Sequence[str], output_path: str) -> Tuple[int, int]:
         "Duplication rate: "
         f"{round((number_of_all_sequences-number_of_output_sequences)/number_of_all_sequences*100, 2)}%"
     )
+
+    if large_input:
+        all_sequences.close()
+
     return number_of_all_sequences, number_of_output_sequences

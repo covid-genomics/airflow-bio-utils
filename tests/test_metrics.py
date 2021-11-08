@@ -25,5 +25,3 @@ def test_metrics():
         input_path=test_file_path,
         output_path=output_path,
     )
-
-
