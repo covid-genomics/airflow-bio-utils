@@ -27,4 +27,4 @@ __all__ = [
     "FilterResultsMetadata",
 ]
 
-__version__ = "0.6.0"
+__version__ = "__version__ = "0.6.0""
