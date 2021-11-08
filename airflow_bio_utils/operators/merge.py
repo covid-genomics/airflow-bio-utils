@@ -21,7 +21,8 @@ class SequenceMergeOperator(PythonOperator):
         paths: Union[Sequence[str], Callable[..., Sequence[str]]],
         output_path: Union[str, Callable[..., str]],
         deduplicate: bool = True,
-        large_input: bool = False ** kwargs,
+        large_input: bool = False,
+        **kwargs,
     ) -> None:
         super().__init__(**kwargs, python_callable=self._execute_operator)
         self.paths = paths
