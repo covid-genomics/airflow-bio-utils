@@ -5,3 +5,4 @@ airflow/
 publish.log
 dist/
 .pytest_cache/
+poetry.toml
